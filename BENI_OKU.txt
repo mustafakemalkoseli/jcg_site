@@ -1,0 +1,22 @@
+justcreativegames.com - site dosyalari
+======================================
+YUKLEME: Bu klasorun ICINDEKI her seyi (klasorun kendisini degil) hostingin
+kok dizinine (genelde public_html) FTP ile yukle. index.html kokte olmali.
+
+SAYFALAR
+  index.html / tr.html                    Ana sayfa (EN / TR)
+  privacy.html / gizlilik.html            Gizlilik Politikasi
+  terms.html / kullanim-sartlari.html     Kullanim Sartlari
+  support.html / destek.html              Destek
+  delete-data.html / veri-silme.html      Veri silme (Google Play istiyor)
+
+E-POSTA: Sayfalarda info@justcreativegames.com yaziyor. Bu adresi ac
+ya da baska adres kullanacaksan tum .html dosyalarinda bul-degistir yap.
+
+NOT: Hukuki metinler taslaktir; yayinlamadan once bir hukukcuya gosterilmesi onerilir.
+
+DOCKER ILE DEPLOY (Ubuntu VPS)
+  Bu klasorun icerigini bir GitHub reposunun KOK dizinine koy.
+  Sunucuda ilk sefer:  REPO_URL=git@github.com:KULLANICI/REPO.git ./jcgDeploy.sh
+  Sonraki her guncelleme:  ./jcgDeploy.sh
+  Container 127.0.0.1:8088 portunda calisir; alan adini reverse proxy ile bu porta yonlendir.

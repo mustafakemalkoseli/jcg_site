@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://justcreativegames.com/sitemap.xml
+Sitemap: https://www.justcreativegames.com/sitemap.xml

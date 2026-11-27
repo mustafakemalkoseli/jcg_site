@@ -18,12 +18,15 @@
 set -euo pipefail
 
 # ----------------------------- AYARLAR --------------------------------------
+# Kalici ayar icin: ~/.jcgDeploy.env dosyasina yaz (ornek:  NETWORK=npm_default)
+if [ -f "$HOME/.jcgDeploy.env" ]; then . "$HOME/.jcgDeploy.env"; fi
 REPO_URL="${REPO_URL:-https://github.com/mustafakemalkoseli/jcg_site.git}"
 BRANCH="${BRANCH:-main}"
 APP_DIR="${APP_DIR:-/opt/jcg_site}"      # repo sunucuda nereye inecek
 NAME="${NAME:-jcg_site}"                 # container ve imaj adi
 BIND="${BIND:-127.0.0.1}"                # disariya dogrudan acmak icin 0.0.0.0
 PORT="${PORT:-8088}"                     # sunucuda bos bir port
+NETWORK="${NETWORK:-}"                   # Nginx Proxy Manager vb. ile ayni docker agi (bos = yok)
 # -----------------------------------------------------------------------------
 
 say()  { printf '\033[1;36m==>\033[0m %s\n' "$*"; }
@@ -63,7 +66,9 @@ docker build --pull -t "$NAME:$REV" -t "$NAME:latest" .
 # ----------------------------- 3) CALISTIR -----------------------------------
 run_container() {  # $1 = imaj etiketi
   docker rm -f "$NAME" >/dev/null 2>&1 || true
-  docker run -d --name "$NAME" --restart unless-stopped \
+  local net=()
+  if [ -n "$NETWORK" ]; then net=(--network "$NETWORK"); fi
+  docker run -d --name "$NAME" --restart unless-stopped "${net[@]}" \
     -p "$BIND:$PORT:80" --label project="$NAME" "$NAME:$1" >/dev/null
 }
 healthy() {
@@ -75,7 +80,8 @@ healthy() {
   return 1
 }
 
-say "Container baslatiliyor: $NAME  ($BIND:$PORT -> 80)"
+if [ -n "$NETWORK" ]; then docker network inspect "$NETWORK" >/dev/null 2>&1 || fail "Docker agi bulunamadi: $NETWORK  (docker network ls ile bak)"; fi
+say "Container baslatiliyor: $NAME  ($BIND:$PORT -> 80${NETWORK:+, ag: $NETWORK})"
 run_container latest
 
 # ----------------------------- 4) KONTROL ------------------------------------
